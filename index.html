@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>moviePage</title>
+  <link rel="stylesheet" href="mainPage.css">
+</head>
+<body>
+<!--<button class="testButton" type="button">click me</button>-->
+  <header class="pageHead">
+    <a class="config" href="#">Config</a>
+    <nav class="navigationBar">
+      <img class="navigationBar-logo" src="src/threater_logo.jpeg" alt="logo">
+      <ul class="navigationBar-textMenu">
+        <li class="navigationBar-textMenu-item_movieList"><a href="#" onclick="mouseClick_HideOrShow_movieList()">Movie List</a></li>
+        <li class="navigationBar-textMenu-item_likedList"><a href="#" onclick="mouseClick_HideOrShow_likedList()"> Liked List</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="moviePage_switch">
+    <div class="movieList_mainPage">
+      <div class="movieList_mainPage-buttons">
+        <button id="movieList_mainPage-buttons-previous">Previous</button>
+        <button id="movieList_mainPage-buttons-next">Next</button>
+      </div>
+    </div>
+
+    <div class="likedList_mainPage">
+      <ul class="myLikedMovieList">
+        <li class="myLikedMovieList-item">item1</li>
+        <li class="myLikedMovieList-item">item2</li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+<script src="mainPage.js"></script>
+
+</html>
