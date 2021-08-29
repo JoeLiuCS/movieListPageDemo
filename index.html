@@ -6,9 +6,11 @@
   <link rel="stylesheet" href="mainPage.css">
 </head>
 <body>
-<!--<button class="testButton" type="button">click me</button>-->
+<!----------Navigation Bar section----------->
   <header class="pageHead">
+    <!----------Config href----------->
     <a class="config" href="#">Config</a>
+    <!----------Navigation Bar----------->
     <nav class="navigationBar">
       <img class="navigationBar-logo" src="src/threater_logo.jpeg" alt="logo">
       <ul class="navigationBar-textMenu">
@@ -18,20 +20,39 @@
     </nav>
   </header>
 
+  <!----------Movie list switch section----------->
   <div class="moviePage_switch">
+    <!-- Movie List page -->
     <div class="movieList_mainPage">
+
+      <!-- previous & next button -->
       <div class="movieList_mainPage-buttons">
         <button id="movieList_mainPage-buttons-previous">Previous</button>
         <button id="movieList_mainPage-buttons-next">Next</button>
       </div>
+      <!-- Movie List -->
+      <div id="mainMovieList">
+        <!--Movie Item Temp use for css styling-->
+        <div class="mainMovieList-item">
+          <img class="mainMovieList-item-image" src="src/movie_default_bg.jpeg" alt="Image">
+          <div class="mainMovieList-item-info">
+            <h3 class="mainMovieList-item-info-title">Moive Title</h3>
+            <p class="mainMovieList-item-info-releaseDate">2020-01-01</p>
+          </div>
+        </div>
+
+      </div>
     </div>
 
+    <!-- liked list page -->
     <div class="likedList_mainPage">
+      <!-- test -->
       <ul class="myLikedMovieList">
         <li class="myLikedMovieList-item">item1</li>
         <li class="myLikedMovieList-item">item2</li>
       </ul>
     </div>
+
   </div>
 
 </body>
