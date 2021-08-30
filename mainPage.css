@@ -7,13 +7,15 @@ body{
     position: relative; /* use for pop up screen*/
 }
 
-.body_popUp{
-    position: absolute;
+/*----------------------------------- Pop up screen ------------------------------------------*/
+.body_popUp{ /* Full page for pop up screen */
+    position: absolute; /* Same position at the main page*/
     left: 0;
     top: -20px;
     width: 100%;
     height: 100%;
     background-color:wheat;
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -22,16 +24,14 @@ body{
     /*visibility: hidden;*/
 }
 
-.body_popUp-close{
-
+.body_popUp-close{ /* Close button */
     margin-left: auto;
     margin-top: 50px;
     width: 50px;
     height: 20px;
     text-decoration: none;
-
 }
-.body_popUp-backGround{
+.body_popUp-backGround{ /* Pop up backGround */
     background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),url("src/movie_default_bg.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
@@ -42,12 +42,12 @@ body{
     height: 30%;
     width: 80%;
 }
-.body_popUp-mainImage{
+.body_popUp-mainImage{ /* Movie Image */
     width: 35%;
     height: 75%;
     margin-right: 30px;
 }
-.body_popUp-infoSection{
+.body_popUp-infoSection{ /* pop up screen Info section */
     background-color: orange;
     display: flex;
     flex-direction: column;
@@ -56,31 +56,31 @@ body{
     width: 60%;
     height: 75%;
 }
-.body_popUp-infoSection-title{
+.body_popUp-infoSection-title{ /* pop up screen title */
     margin: 10px;
 }
-.body_popUp-infoSection-genres{
+.body_popUp-infoSection-genres{ /* pop up screen generes */
     margin: 10px;
     display: inline;
     width: auto;
     height: auto;
 }
-.body_popUp-infoSection-genres-item{
+.body_popUp-infoSection-genres-item{ /* pop up screen generes items */
     float: left;
     margin-left: 10px;
 }
-.body_popUp-infoSection-description{
+.body_popUp-infoSection-description{ /* pop up screen description*/
     width: 80%;
     height: auto;
     margin: 10px;
 }
-.body_popUp-infoSection-producer{
+.body_popUp-infoSection-producer{ /* pop up screen producer screen*/
     display: inline;
     background-color:darkgray;
     width: 80%;
     height: 30%;
 }
-.body_popUp-infoSection-producer-item{
+.body_popUp-infoSection-producer-item{ /* pop up screen producer item*/
     float: left;
     margin: 15px;
 }
@@ -130,7 +130,7 @@ body{
     background-repeat: no-repeat;
 }
 
-/*---------------------------------------------------------------------------------------------------*/
+/*------------------------------------The most popular movies------------------------------------------------*/
 .title_TheMostPopularMovies{
     margin-left: 20px;
 }
@@ -155,6 +155,17 @@ body{
     width: 100px;
 }
 
+
+
+
+
+
+
+
+
+
+
+
 #mainMovieList{ /* display movie list*/
     margin-left: 50px;
     margin-right: 50px;
@@ -172,14 +183,14 @@ body{
     background-color: blanchedalmond;
 
     margin: 50px;
-    position: relative;
+    position: relative; /* Make for hover button */
 }
 .mainMovieList-item-image{
     width: 100%;
     height: 85%;
     border-radius: 5px;
 }
-#mainMovieList-item-info{
+.mainMovieList-item-info{
     display: block;
     text-align: center;
 }
@@ -193,7 +204,7 @@ body{
     width: 50%;
     height: 10%;
 
-    position: absolute;
+    position: absolute; /* based on movie image position*/
     visibility: hidden;
 }
 
@@ -204,13 +215,39 @@ body{
 
 
 
-/*---------------------------------------------------------------------------------------------------*/
+/*----------------------------Liked List-----------------------------------------------------*/
 
-.likedList_mainPage{
+#likedList_mainPage{
     visibility: hidden;
     position: absolute;
     left: 0;
     top: 0;
+
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top: 20px;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
+.likedList_mainPage-item{
+    width: 200px;
+    height: 100%;
+    box-shadow: 0.2px 4px 5px rgba(0,0,0,0.1);
+    background-color: blanchedalmond;
+
+    margin: 50px;
+}
+.likedList_mainPage-item-image{
+    width: 100%;
+    height: 85%;
+    border-radius: 5px;
+}
+.likedList_mainPage-item-info{
+    display: block;
+    text-align: center;
+}
+
 
 

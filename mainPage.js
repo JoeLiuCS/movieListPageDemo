@@ -10,8 +10,8 @@ const buttonsInfo = document.getElementById('movieList_mainPage-buttons_info');
 let myPrevious_butt = document.querySelector('#movieList_mainPage-buttons-previous');
 let myNext_butt = document.querySelector('#movieList_mainPage-buttons-next');
 
+// Global variables
 let current_page,total_pages,total_results;
-
 let button_Page = 1;
 
 // let myURL_data;
@@ -23,6 +23,7 @@ render();
 
 function render(){
     getMovies(popularMovie_URL + button_Page);
+    initButtons();
 }
 
 
@@ -34,22 +35,27 @@ function getMovies(url) {
     })
 }
 
-/* Page up date*/
-function previous_mainPage(){
 
-    button_Page -=1;
-    let popularMovie_URL_temp = popularMovie_URL + button_Page;
-    console.log("button: " + button_Page);
-    getMovies(popularMovie_URL_temp);
 
+function initButtons(){
+    myPrevious_butt.addEventListener("click",() => {
+        if(button_Page > 1){
+            button_Page -=1;
+            let popularMovie_URL_temp = popularMovie_URL + button_Page;
+            console.log("button: " + button_Page);
+            getMovies(popularMovie_URL_temp);
+        }
+    });
+    myNext_butt.addEventListener("click",() =>{
+        if(button_Page < 500){
+            button_Page +=1;
+            let popularMovie_URL_temp = popularMovie_URL + button_Page;
+            console.log("button: " + button_Page);
+            getMovies(popularMovie_URL_temp);
+        }
+    });
 }
 
-function next_mainPage(){
-    button_Page +=1;
-    let popularMovie_URL_temp = popularMovie_URL + button_Page;
-    console.log("button: " + button_Page);
-    getMovies(popularMovie_URL_temp);
-}
 
 
 
@@ -66,17 +72,24 @@ function showMovie(data){
 
     if(data.page <= 1){
         myPrevious_butt.style.background = 'darkGray';
-
+        myPrevious_butt.style.cursor = 'not-allowed';
+        myPrevious_butt.disabled = "disabled";
     }
     else{
         myPrevious_butt.style.background = 'whitesmoke';
+        myPrevious_butt.style.cursor = null;
+        myPrevious_butt.disabled = null;
     }
 
     if(data.page > 500){
         myNext_butt.style.background = 'darkGray';
+        myNext_butt.style.cursor = 'not-allowed';
+        myNext_butt.disabled = "disabled";
     }
     else{
         myNext_butt.style.background = 'whitesmoke';
+        myNext_butt.style.cursor = null;
+        myNext_butt.disabled = null;
     }
 
 
@@ -124,7 +137,7 @@ function mouseClick_HideOrShow_movieList(){
     let movieListPage = document.querySelector(".movieList_mainPage");
     movieListPage.style.visibility = "visible";
 
-    let likedListPage = document.querySelector(".likedList_mainPage");
+    let likedListPage = document.querySelector("#likedList_mainPage");
     likedListPage.style.visibility = "hidden";
 }
 
@@ -135,11 +148,11 @@ function mouseClick_HideOrShow_likedList(){
     let movieListPage = document.querySelector(".movieList_mainPage");
     movieListPage.style.visibility = "hidden";
 
-    let likedListPage = document.querySelector(".likedList_mainPage");
+    let likedListPage = document.querySelector("#likedList_mainPage");
     likedListPage.style.visibility = "visible";
 }
 
-//
+
 //
 // const butt = document.querySelector('.testButton');
 //

@@ -28,11 +28,13 @@
 
       <!-- previous & next button -->
       <div class="movieList_mainPage-buttons">
-        <button id="movieList_mainPage-buttons-previous" onclick="previous_mainPage()">Previous</button>
+<!--        <button id="movieList_mainPage-buttons-previous" onclick="previous_mainPage()">Previous</button>-->
+        <button id="movieList_mainPage-buttons-previous">Previous</button>
         <span id="movieList_mainPage-buttons_info">Page 1/Total 500 of 10000 results</span>
-        <button id="movieList_mainPage-buttons-next" onclick="next_mainPage()">Next</button>
+<!--        <button id="movieList_mainPage-buttons-next" onclick="next_mainPage()">Next</button>-->
+        <button id="movieList_mainPage-buttons-next">Next</button>
       </div>
-      <!-- Movie List -->
+      <!--(ID) Movie List -->
       <div id="mainMovieList">
         <!--Movie Item Temp use for css styling-->
         <div class="mainMovieList-item">
@@ -51,13 +53,26 @@
       </div>
     </div>
 
-    <!-- liked list page -->
-    <div class="likedList_mainPage">
+    <!-- (ID) liked list page -->
+    <div id="likedList_mainPage">
+
       <!-- test -->
-      <ul class="myLikedMovieList">
-        <li class="myLikedMovieList-item">item1</li>
-        <li class="myLikedMovieList-item">item2</li>
-      </ul>
+      <div class="likedList_mainPage-item">
+        <img class="likedList_mainPage-item-image" src="src/movie_default_bg.jpeg" alt="Image">
+        <div class="likedList_mainPage-item-info">
+          <h3 class="likedList_mainPage-item-info-title">Moive Title</h3>
+          <p class="likedList_mainPage-item-info-releaseDate">2020-01-01</p>
+        </div>
+      </div>
+
+      <div class="likedList_mainPage-item">
+        <img class="likedList_mainPage-item-image" src="src/movie_default_bg.jpeg" alt="Image">
+        <div class="likedList_mainPage-item-info">
+          <h3 class="likedList_mainPage-item-info-title">Moive Title</h3>
+          <p class="likedList_mainPage-item-info-releaseDate">2020-01-01</p>
+        </div>
+      </div>
+
     </div>
 
 
