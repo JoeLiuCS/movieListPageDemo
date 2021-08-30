@@ -21,14 +21,16 @@
   </header>
 
   <!----------Movie list switch section----------->
+  <h1 class="title_TheMostPopularMovies">The Most Popular Movies</h1>
   <div class="moviePage_switch">
     <!-- Movie List page -->
     <div class="movieList_mainPage">
 
       <!-- previous & next button -->
       <div class="movieList_mainPage-buttons">
-        <button id="movieList_mainPage-buttons-previous">Previous</button>
-        <button id="movieList_mainPage-buttons-next">Next</button>
+        <button id="movieList_mainPage-buttons-previous" onclick="previous_mainPage()">Previous</button>
+        <span id="movieList_mainPage-buttons_info">Page 1/Total 500 of 10000 results</span>
+        <button id="movieList_mainPage-buttons-next" onclick="next_mainPage()">Next</button>
       </div>
       <!-- Movie List -->
       <div id="mainMovieList">
@@ -39,6 +41,11 @@
             <h3 class="mainMovieList-item-info-title">Moive Title</h3>
             <p class="mainMovieList-item-info-releaseDate">2020-01-01</p>
           </div>
+
+          <div class="mainMovieList-likeButton">
+            <button class="mainMovieList-likeButton-press">Like it?</button>
+          </div>
+
         </div>
 
       </div>
@@ -53,6 +60,30 @@
       </ul>
     </div>
 
+
+
+  </div>
+
+  <div class="body_popUp">
+    <a class="body_popUp-close" href="#" onclick="closeButt_body_popUp()">Close</a>
+
+    <div class="body_popUp-backGround">
+      <img class="body_popUp-mainImage" src="src/movie_default_bg.jpeg" alt="Image">
+
+      <div class="body_popUp-infoSection">
+        <h2 class="body_popUp-infoSection-title">Movie Title (Year)</h2>
+        <div class="body_popUp-infoSection-genres">
+          <p class="body_popUp-infoSection-genres-item">Comedy</p>
+          <p class="body_popUp-infoSection-genres-item">Music</p>
+        </div>
+        <p class="body_popUp-infoSection-description">Movie Description, Movie Description, Movie Description, </p>
+        <div class="body_popUp-infoSection-producer">
+          <p class="body_popUp-infoSection-producer-item">producer1</p>
+          <p class="body_popUp-infoSection-producer-item">producer2</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 
 </body>
