@@ -4,6 +4,14 @@ const POPULAR_MOVIE_URL = "/discover/movie?sort_by=popularity.desc";
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 let popularMovie_URL = BASE_URL + POPULAR_MOVIE_URL + '&' + API_KEY + '&' +'page=';
 
+// Get from https://api.themoviedb.org/3/genre/movie/list?api_key=08dd326698d783b96fc6689627c7de6c&language=en-US
+const genres_bank = {"genres":[{"id":28,"name":"Action","color":"#ff0000"},{"id":12,"name":"Adventure","color":"#ff4000"},{"id":16,"name":"Animation","color":"#ff8000"},
+        {"id":35,"name":"Comedy","color":"#ffbf00"},{"id":80,"name":"Crime","color":"#ffff00"},{"id":99,"name":"Documentary","color":"#bfff00"},
+        {"id":18,"name":"Drama","color":"#80ff00"},{"id":10751,"name":"Family","color":"#40ff00"},{"id":14,"name":"Fantasy","color":"#00ff00"},
+        {"id":36,"name":"History","color":"#00ff40"},{"id":27,"name":"Horror","color":"#00ff80"},{"id":10402,"name":"Music","color":"#00ffbf"},
+        {"id":9648,"name":"Mystery","color":"#00ffff"},{"id":10749,"name":"Romance","color":"#00bfff"},{"id":878,"name":"Science Fiction","color":"#0080ff"},
+        {"id":10770,"name":"TV Movie","color":"#0040ff"},{"id":53,"name":"Thriller","color":"#0000ff"},{"id":10752,"name":"War","color":"#ff00ff"},{"id":37,"name":"Western","color":"#ff0040"}]};
+
 const mainMovieList = document.getElementById('mainMovieList');
 const buttonsInfo = document.getElementById('movieList_mainPage-buttons_info');
 
@@ -18,6 +26,7 @@ const body_popUp_page = document.querySelector('.body_popUp');
 // const allLike_butts = document.querySelectorAll(".mainMovieList-likeButton-press");
 
 let allLike_butts; // In asyn functions
+let movieList_img_butts;
 
 const config_butt = document.querySelector(".config");
 const body_popUp_close_butt = document.querySelector(".body_popUp-close");
@@ -34,7 +43,6 @@ let button_Page = 1;
 
 let movieList_storeTemp = []; //use for add to like list
 let likedList_storeTemp = [];
-let likedList_check = [];
 let badge_count = 0;
 
 render();
@@ -92,7 +100,7 @@ function initButtons(){
 function show_LikedListButton(){
 
     likedList_butt.style.visibility = "visible";
-    if(badge_count != 0){
+    if(badge_count !== 0){
         likedList_badge.textContent = `${badge_count}`;
     }
 }
@@ -105,9 +113,6 @@ function getButtonInfo(data){
 
 
 function showMovie(data){
-
-
-
     if(data.page <= 1){
         myPrevious_butt.style.background = 'darkGray';
         myPrevious_butt.style.cursor = 'not-allowed';
@@ -159,7 +164,7 @@ function showMovie(data){
         const movieTemp = document.createElement('div');
         movieTemp.classList.add(`mainMovieList-item`);
         movieTemp.innerHTML =
-            `<img class="mainMovieList-item-image" src="${IMAGE_BASE_URL + poster_path}" alt="Image">
+            `<img class="mainMovieList-item-image" src="${IMAGE_BASE_URL + poster_path}" id="img_button_${i}" alt="Image">
              <div class="mainMovieList-item-info">
                  <h3 class="mainMovieList-item-info-title">${original_title}</h3>
                  <p class="mainMovieList-item-info-releaseDate">${release_date}</p>
@@ -171,22 +176,74 @@ function showMovie(data){
         mainMovieList.appendChild(movieTemp);
     }
 
+    movieList_img_butts = document.querySelectorAll(".mainMovieList-item-image");
+    movieList_img_butts.forEach((button) =>{
+        button.addEventListener("click",() => {
+
+            let tempIndex = button.id.split('_'); /* [button,number] */
+            let index = tempIndex[tempIndex.length - 1];
+
+            //append to liked list array
+            let getThisMovie = movieList_storeTemp[index];
+
+            console.log(getThisMovie);
+            body_popUp_page.style.visibility = "visible";
+
+            const pop_backGround = document.querySelector('.body_popUp-backGround');
+            pop_backGround.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+                                                                url(${IMAGE_BASE_URL + getThisMovie.backdrop_path})`;
+
+            const pop_mainImage = document.querySelector('.body_popUp-mainImage');
+            pop_mainImage.src = `${IMAGE_BASE_URL + getThisMovie.poster_path}`;
+
+            const pop_genres =  document.querySelector('.body_popUp-infoSection-genres');
+            const genreArr = getThisMovie.genre_ids;
+            const genresList = genres_bank.genres;
+            pop_genres.innerHTML = "";
+            for(let i=0; i < genreArr.length; i++){
+                for(let j=0; j < genresList.length; j++){
+                    if(genreArr[i] === genresList[j].id){
+                        const genres_single = document.createElement('p');
+                        genres_single.classList.add('body_popUp-infoSection-genres-item');
+
+                        genres_single.textContent = genresList[j].name;
+                        genres_single.style.backgroundColor = genresList[j].color;
+
+                        pop_genres.appendChild(genres_single);
+                    }
+                }
+            }
+
+            const pop_description = document.querySelector('.body_popUp-infoSection-description');
+            pop_description.textContent = `${getThisMovie.overview}`;
+
+            const title_year = document.querySelector('.body_popUp-infoSection-title');
+            title_year.textContent = `${getThisMovie.original_title} (${getThisMovie.release_date})`;
+
+
+        });
+    });
+
     /* After generate all the like buttons, then select */
-    allLike_butts = document.querySelectorAll(".mainMovieList-likeButton-press");
 
     /*------------------------------------------------------------------------*/
     // likedListPage.innerHTML = ''; //after remove templicate delete this line
     /*-----------------------------------------------------------------------*/
 
+    allLike_butts = document.querySelectorAll(".mainMovieList-likeButton-press");
+
     allLike_butts.forEach((button) => {
         button.addEventListener("click", () => {
-            let index = button.id.charAt(button.id.length - 1);
-            // console.log("I clicked : " + index);
+
+            let tempIndex = button.id.split('_'); /* [button,number] */
+            let index = tempIndex[tempIndex.length - 1];
 
             //append to liked list array
             let getThisMovie = movieList_storeTemp[index];
 
-            if( !likedList_storeTemp.includes(getThisMovie)){
+            // console.log(movieList_storeTemp);
+
+            if(!likedList_storeTemp.includes(getThisMovie)){
 
                 badge_count++;
                 show_LikedListButton();

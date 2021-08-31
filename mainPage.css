@@ -19,9 +19,9 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /*justify-content: center;*/
 
-    /*visibility: hidden;*/
+    visibility: hidden;
 }
 
 .body_popUp-close{ /* Close button */
@@ -48,7 +48,7 @@ body{
     margin-right: 30px;
 }
 .body_popUp-infoSection{ /* pop up screen Info section */
-    background-color: orange;
+    /*background-color: rgba(0,2,0,0.8);*/
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -68,7 +68,7 @@ body{
 .body_popUp-infoSection-genres-item{ /* pop up screen generes items */
     float: left;
     margin-left: 10px;
-    background-color:pink; /* later remove, in js add style*/
+    /*background-color:#00ff00; !* later remove, in js add style*!*/
     border-radius: 3px;
     padding: 1px;
 }
@@ -261,6 +261,3 @@ body{
     display: block;
     text-align: center;
 }
-
-
-
