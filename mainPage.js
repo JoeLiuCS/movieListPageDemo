@@ -7,6 +7,8 @@ let popularMovie_URL = BASE_URL + POPULAR_MOVIE_URL + '&' + API_KEY + '&' +'page
 const mainMovieList = document.getElementById('mainMovieList');
 const buttonsInfo = document.getElementById('movieList_mainPage-buttons_info');
 
+const likedList_badge = document.querySelector('.navigationBar-textMenu-item_likedList_badge');
+
 const movieListPage = document.querySelector(".movieList_mainPage");
 const likedListPage = document.querySelector("#likedList_mainPage");
 const body_popUp_page = document.querySelector('.body_popUp');
@@ -33,6 +35,7 @@ let button_Page = 1;
 let movieList_storeTemp = []; //use for add to like list
 let likedList_storeTemp = [];
 let likedList_check = [];
+let badge_count = 0;
 
 render();
 
@@ -49,7 +52,6 @@ function getMovies(url) {
 
         getButtonInfo(data);
         showMovie(data);
-
     })
 }
 
@@ -79,18 +81,20 @@ function initButtons(){
         config_butt.style.visibility = "visible";
         movieListPage.style.visibility = "hidden";
         likedListPage.style.visibility = "visible";
+        likedList_badge.textContent = "";
+        badge_count = 0;
     });
     body_popUp_close_butt.addEventListener("click", () => {
         body_popUp_page.style.visibility = "hidden";
     });
-
-
 }
 
 function show_LikedListButton(){
-    // if(!likedList_storeTemp.length == 0){
-        likedList_butt.style.visibility = "visible";
-    // }
+
+    likedList_butt.style.visibility = "visible";
+    if(badge_count != 0){
+        likedList_badge.textContent = `${badge_count}`;
+    }
 }
 
 function getButtonInfo(data){
@@ -184,6 +188,7 @@ function showMovie(data){
 
             if( !likedList_storeTemp.includes(getThisMovie)){
 
+                badge_count++;
                 show_LikedListButton();
 
                 likedList_storeTemp.push(getThisMovie);

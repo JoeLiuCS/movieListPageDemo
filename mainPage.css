@@ -116,12 +116,27 @@ body{
 .navigationBar-textMenu-item_likedList{ /* Menu Text */
     float: left;
     margin: 20px;
-    font-size: 1.2vw; /* Size based on the navigation bar*/
+    font-size: 1.5vw; /* Size based on the navigation bar*/
+    padding: 10px;
+
 
     list-style-type: none;
 }
 .navigationBar-textMenu-item_likedList{
     visibility: hidden;
+    position: relative; /* here here here*/
+}
+.navigationBar-textMenu-item_likedList_badge{
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+
+    /*padding: 1px 1px;*/
+    font-size: 13px;
+
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    right: 0;
 }
 
 .navigationBar-textMenu a{
