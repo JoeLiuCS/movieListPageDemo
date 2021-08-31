@@ -68,6 +68,9 @@ body{
 .body_popUp-infoSection-genres-item{ /* pop up screen generes items */
     float: left;
     margin-left: 10px;
+    background-color:pink; /* later remove, in js add style*/
+    border-radius: 3px;
+    padding: 1px;
 }
 .body_popUp-infoSection-description{ /* pop up screen description*/
     width: 80%;
@@ -117,6 +120,9 @@ body{
 
     list-style-type: none;
 }
+.navigationBar-textMenu-item_likedList{
+    visibility: hidden;
+}
 
 .navigationBar-textMenu a{
     text-decoration: none;
@@ -155,15 +161,7 @@ body{
     width: 100px;
 }
 
-
-
-
-
-
-
-
-
-
+/*-----------------------------------------------------------------------------------------*/
 
 
 #mainMovieList{ /* display movie list*/
@@ -179,7 +177,7 @@ body{
 .mainMovieList-item{
     width: 200px;
     height: 100%;
-    box-shadow: 0.2px 4px 5px rgba(0,0,0,0.1);
+    box-shadow: 1px 4px 5px rgba(0,0,0,0.1);
     background-color: blanchedalmond;
 
     margin: 50px;

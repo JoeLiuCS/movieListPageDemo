@@ -7,35 +7,51 @@ let popularMovie_URL = BASE_URL + POPULAR_MOVIE_URL + '&' + API_KEY + '&' +'page
 const mainMovieList = document.getElementById('mainMovieList');
 const buttonsInfo = document.getElementById('movieList_mainPage-buttons_info');
 
-let myPrevious_butt = document.querySelector('#movieList_mainPage-buttons-previous');
-let myNext_butt = document.querySelector('#movieList_mainPage-buttons-next');
+const movieListPage = document.querySelector(".movieList_mainPage");
+const likedListPage = document.querySelector("#likedList_mainPage");
+const body_popUp_page = document.querySelector('.body_popUp');
 
-// Global variables
+/*------------------------------ Buttons ----------------------------------------------------*/
+//get all buttons
+// const allLike_butts = document.querySelectorAll(".mainMovieList-likeButton-press");
+
+let allLike_butts; // In asyn functions
+
+const config_butt = document.querySelector(".config");
+const body_popUp_close_butt = document.querySelector(".body_popUp-close");
+
+const myPrevious_butt = document.querySelector('#movieList_mainPage-buttons-previous');
+const myNext_butt = document.querySelector('#movieList_mainPage-buttons-next');
+
+const movieList_butt = document.querySelector('.navigationBar-textMenu-item_movieList');
+const likedList_butt = document.querySelector('.navigationBar-textMenu-item_likedList');
+
+/*------------------------------ Global variables ----------------------------------------------------*/
 let current_page,total_pages,total_results;
 let button_Page = 1;
 
-// let myURL_data;
+let movieList_storeTemp = []; //use for add to like list
+let likedList_storeTemp = [];
+let likedList_check = [];
 
-//initial
 render();
-
-// console.log(myURL_data);
 
 function render(){
     getMovies(popularMovie_URL + button_Page);
     initButtons();
 }
 
-
 function getMovies(url) {
     console.log(url);
     fetch(url).then(res => res.json()).then(data => {
+        console.log("Check my all data: ");
+        console.log(data);
+
         getButtonInfo(data);
         showMovie(data);
+
     })
 }
-
-
 
 function initButtons(){
     myPrevious_butt.addEventListener("click",() => {
@@ -54,11 +70,28 @@ function initButtons(){
             getMovies(popularMovie_URL_temp);
         }
     });
+    movieList_butt.addEventListener("click", () =>{
+        config_butt.style.visibility = "hidden";
+        movieListPage.style.visibility = "visible";
+        likedListPage.style.visibility = "hidden";
+    });
+    likedList_butt.addEventListener("click", () => {
+        config_butt.style.visibility = "visible";
+        movieListPage.style.visibility = "hidden";
+        likedListPage.style.visibility = "visible";
+    });
+    body_popUp_close_butt.addEventListener("click", () => {
+        body_popUp_page.style.visibility = "hidden";
+    });
+
+
 }
 
-
-
-
+function show_LikedListButton(){
+    // if(!likedList_storeTemp.length == 0){
+        likedList_butt.style.visibility = "visible";
+    // }
+}
 
 function getButtonInfo(data){
     current_page = data.page;
@@ -68,7 +101,8 @@ function getButtonInfo(data){
 
 
 function showMovie(data){
-    mainMovieList.innerHTML = '';
+
+
 
     if(data.page <= 1){
         myPrevious_butt.style.background = 'darkGray';
@@ -81,7 +115,7 @@ function showMovie(data){
         myPrevious_butt.disabled = null;
     }
 
-    if(data.page > 500){
+    if(data.page >= 500){
         myNext_butt.style.background = 'darkGray';
         myNext_butt.style.cursor = 'not-allowed';
         myNext_butt.disabled = "disabled";
@@ -92,25 +126,34 @@ function showMovie(data){
         myNext_butt.disabled = null;
     }
 
-
-    // console.log(" Current Page: "+current_page+" total Pages: "+total_pages+" total results: "+total_results);
-
-    let dataPage = data.results;
-
+    let dataPage = data.results; // Each movie info
 
     // console.log("My total page: " + data.total_pages);
     // console.log("My total result: " + data.total_results);
     // console.log("My current page: " + data.page);
 
+    mainMovieList.innerHTML = ''; /* Clear default Inner HTML */
+
     buttonsInfo.innerHTML= `<span id="movieList_mainPage-buttons_info">
                             Page ${current_page}/Total ${total_pages} of ${total_results} results</span>`;
 
+    // console.log("DataPage length :"+ dataPage.length);
+    // console.log("DataPage item_1 :");
+    // console.log(dataPage[0]);
 
-    dataPage.forEach( movie => {
-        const{poster_path,original_title,release_date} = movie;
+    movieList_storeTemp = JSON.parse(JSON.stringify(dataPage));
+
+    // console.log("movieList_storeTemp check item :");
+    // console.log(movieList_storeTemp);
+
+    for(let i=0; i < dataPage.length; i++){
+        const movie = dataPage[i];
+        const {poster_path,original_title,release_date} = movie;
+
         // console.log('myTest' + poster_path + original_title + release_date);
+
         const movieTemp = document.createElement('div');
-        movieTemp.classList.add('mainMovieList-item');
+        movieTemp.classList.add(`mainMovieList-item`);
         movieTemp.innerHTML =
             `<img class="mainMovieList-item-image" src="${IMAGE_BASE_URL + poster_path}" alt="Image">
              <div class="mainMovieList-item-info">
@@ -118,50 +161,48 @@ function showMovie(data){
                  <p class="mainMovieList-item-info-releaseDate">${release_date}</p>
              </div>
              <div class="mainMovieList-likeButton">
-                 <button class="mainMovieList-likeButton-press">Like it?</button>
+                 <button class="mainMovieList-likeButton-press" id='button_${i}'>Like it?</button>
              </div>
             `;
         mainMovieList.appendChild(movieTemp);
-    })
+    }
+
+    /* After generate all the like buttons, then select */
+    allLike_butts = document.querySelectorAll(".mainMovieList-likeButton-press");
+
+    /*------------------------------------------------------------------------*/
+    // likedListPage.innerHTML = ''; //after remove templicate delete this line
+    /*-----------------------------------------------------------------------*/
+
+    allLike_butts.forEach((button) => {
+        button.addEventListener("click", () => {
+            let index = button.id.charAt(button.id.length - 1);
+            // console.log("I clicked : " + index);
+
+            //append to liked list array
+            let getThisMovie = movieList_storeTemp[index];
+
+            if( !likedList_storeTemp.includes(getThisMovie)){
+
+                show_LikedListButton();
+
+                likedList_storeTemp.push(getThisMovie);
+
+                const {poster_path,original_title,release_date} = getThisMovie;
+
+                const movieTemp = document.createElement('div');
+                movieTemp.classList.add(`likedList_mainPage-item`);
+                movieTemp.innerHTML =
+                    `<img class="likedList_mainPage-item-image" src="${IMAGE_BASE_URL + poster_path}" alt="Image">
+                     <div class="likedList_mainPage-item-info">
+                         <h3 class="likedList_mainPage-item-info-title">${original_title}</h3>
+                         <p class="likedList_mainPage-item-info-releaseDate">${release_date}</p>
+                     </div>
+                     `;
+                // console.log(movieList_storeTemp.length);
+                //add inner html
+                likedListPage.appendChild(movieTemp);
+            }
+        });
+    });
 }
-
-function closeButt_body_popUp(){
-    let body_popUp_butt = document.querySelector('.body_popUp');
-    body_popUp_butt.style.visibility = "hidden";
-}
-
-function mouseClick_HideOrShow_movieList(){
-    let config_butt = document.querySelector(".config");
-    config_butt.style.visibility = "hidden";
-
-    let movieListPage = document.querySelector(".movieList_mainPage");
-    movieListPage.style.visibility = "visible";
-
-    let likedListPage = document.querySelector("#likedList_mainPage");
-    likedListPage.style.visibility = "hidden";
-}
-
-function mouseClick_HideOrShow_likedList(){
-    let config_butt = document.querySelector(".config");
-    config_butt.style.visibility = "visible";
-
-    let movieListPage = document.querySelector(".movieList_mainPage");
-    movieListPage.style.visibility = "hidden";
-
-    let likedListPage = document.querySelector("#likedList_mainPage");
-    likedListPage.style.visibility = "visible";
-}
-
-
-//
-// const butt = document.querySelector('.testButton');
-//
-// butt.addEventListener("click",buttonIni);
-//
-// function buttonIni(){
-//     let h = document.createElement("p");
-//     let text = document.createTextNode("me!");
-//     h.appendChild(text);
-//     document.body.appendChild(h);
-// }
-
