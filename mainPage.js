@@ -153,7 +153,6 @@ function initButtons(){
     /* Open Config page */
     config_butt.addEventListener("click",() =>{
         config_page.style.visibility = "visible";
-        console.log("Check How many like items: ",likedList_storeTemp.length);
         // add like list to config page
         for(let i = 0; i < likedList_storeTemp.length; i++){
             const likeMoiveTitle = likedList_storeTemp[i].original_title;
@@ -174,7 +173,6 @@ function initButtons(){
     /* Close Config page */
     configClose_butt.addEventListener("click",() => {
         config_page.style.visibility = "hidden";
-        console.log("How many like items: ",likedList_storeTemp.length);
         //clean config page
         drag_list.innerHTML = '';
     });
