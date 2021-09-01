@@ -300,8 +300,8 @@ html{ /* slowly scrolling*/
     height: 100%;
     left: 0;
     top: 300px;
-    background: rgba(0,0,0,0.5);
+    opacity: 0.8;
     text-align: center;
-    display: none;
-    /*visibility: hidden;*/
+    /*display: none;*/
+    visibility: hidden;
 }

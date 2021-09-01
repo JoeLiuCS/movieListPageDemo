@@ -23,10 +23,9 @@ const likedListPage = document.querySelector("#likedList_mainPage");
 const body_popUp_page = document.querySelector('.body_popUp');
 const head_title = document.querySelector('.title_Movies');
 
-const moviePageSwitch = document.querySelector('.moviePage_switch');
-/*------------------------------ Buttons ----------------------------------------------------*/
-//get all buttons
-// const allLike_butts = document.querySelectorAll(".mainMovieList-likeButton-press");
+const loading_page = document.querySelector('.Loading-page');
+
+/*-------------------------------------------- Buttons ----------------------------------------------------*/
 
 let allLike_butts; // In asyn functions
 let movieList_img_butts;
@@ -40,7 +39,7 @@ const myNext_butt = document.querySelector('#movieList_mainPage-buttons-next');
 const movieList_butt = document.querySelector('.navigationBar-textMenu-item_movieList');
 const likedList_butt = document.querySelector('.navigationBar-textMenu-item_likedList');
 
-/*------------------------------ Global variables ----------------------------------------------------*/
+/*------------------------------------ Global variables ----------------------------------------------------*/
 let current_page,total_pages,total_results;
 let button_Page = 1;
 
@@ -49,81 +48,105 @@ let likedList_storeTemp = [];
 let badge_count = 0;
 
 
-//
+/*---------------------------------------Programming Execute------------------------------------------------*/
 render();
+/*----------------------------------------------------------------------------------------------------------*/
+
 
 function render(){
+    /*Initial*/
     getMovies(popularMovie_URL + button_Page);
 
-    /**/
+    /*Listener Events*/
     initButtons();
 }
 
-function getMovies(url) {
-    console.log(url);
-    //loadpage display
-    fetch(url).then(res => res.json()).then(data => {
-        console.log("Check my all data: ");
-        console.log(data);
-        getButtonInfo(data);
+async function getMovies(url) {
+    try {
+        run_loadingPage(true);       /* Loading Page Start*/
+        let res = await fetch(url);
+        let data = await res.json();
+        run_loadingPage(false);      /* Loading Page End*/
+
+        getPageIndex_Info(data);
         showMovie(data);
-    })
-    //loadpage none
+
+    }catch (error){
+        console.log("url-Errors: ",error);
+    }
 }
 
+/* Loading page function */
+function run_loadingPage(isLoading_orNot){
+    if(isLoading_orNot){
+        loading_page.style.visibility = "visible";
+    }
+    else{
+        loading_page.style.visibility = "hidden";
+    }
+}
+/* The button page index and total movies count*/
+function getPageIndex_Info(data){
+    current_page = data.page;
+    total_pages = data.total_pages;
+    total_results = data.total_results;
+}
+/* Function for show notification badge*/
+function show_LikedListButton(){
+    likedList_butt.style.visibility = "visible";
+    if(badge_count !== 0){
+        likedList_badge.textContent = `${badge_count}`;
+    }
+}
+/* Buttons initialize */
 function initButtons(){
+    /* Check previous button is clickable, if yes go previous */
     myPrevious_butt.addEventListener("click",() => {
         if(button_Page > 1){
             button_Page -=1;
             let popularMovie_URL_temp = popularMovie_URL + button_Page;
-            console.log("button: " + button_Page);
-            // setTimeout(getMovies(popularMovie_URL_temp),10000);
+            // After click, refresh the page
             getMovies(popularMovie_URL_temp);
         }
     });
+    /* Check previous button is clickable, if yes go next */
     myNext_butt.addEventListener("click",() =>{
         if(button_Page < 500){
             button_Page +=1;
             let popularMovie_URL_temp = popularMovie_URL + button_Page;
-            console.log("button: " + button_Page);
+            // After click, refresh the page
             getMovies(popularMovie_URL_temp);
         }
     });
+    /* Switch the movie page layout */
     movieList_butt.addEventListener("click", () =>{
         config_butt.style.visibility = "hidden";
         movieListPage.style.visibility = "visible";
         likedListPage.style.visibility = "hidden";
         head_title.textContent = "The Most Popular Movies";
     });
+    /* Switch the liked-List page layout */
     likedList_butt.addEventListener("click", () => {
         config_butt.style.visibility = "visible";
         movieListPage.style.visibility = "hidden";
         likedListPage.style.visibility = "visible";
         head_title.textContent = "The Liked Movies";
+
+        /* After click likedlist button, refresh the notification badge */
         likedList_badge.textContent = "";
         badge_count = 0;
     });
+    /* Pop Up screen */
     body_popUp_close_butt.addEventListener("click", () => {
         body_popUp_page.style.visibility = "hidden";
     });
 }
 
-function show_LikedListButton(){
-
-    likedList_butt.style.visibility = "visible";
-    if(badge_count !== 0){
-        likedList_badge.textContent = `${badge_count}`;
-    }
-}
-
-function getButtonInfo(data){
-    current_page = data.page;
-    total_pages = data.total_pages;
-    total_results = data.total_results;
-}
-
-
+/* use for refresh the main page when next or previous button is clicked*/
+/* this is Fvkin serious long */
 function showMovie(data){
+    // Use for control next and previous buttons
+    // if page reach to 1 and 500, special styles will active
     if(data.page <= 1){
         myPrevious_butt.style.background = 'darkGray';
         myPrevious_butt.style.cursor = 'not-allowed';
@@ -146,14 +169,15 @@ function showMovie(data){
         myNext_butt.disabled = null;
     }
 
-    let dataPage = data.results; // Each movie info
+    let dataPage = data.results; // Get current page movies info
 
     // console.log("My total page: " + data.total_pages);
     // console.log("My total result: " + data.total_results);
     // console.log("My current page: " + data.page);
 
-    mainMovieList.innerHTML = ''; /* Clear default Inner HTML */
+    mainMovieList.innerHTML = ''; /* Clear TEMPLATE Inner HTML before we insert new html */
 
+    // Update current page index info
     buttonsInfo.innerHTML= `<span id="movieList_mainPage-buttons_info">
                             Page ${current_page}/Total ${total_pages} of ${total_results} results</span>`;
 
@@ -161,17 +185,18 @@ function showMovie(data){
     // console.log("DataPage item_1 :");
     // console.log(dataPage[0]);
 
+    // Deep copy to my page storage array
     movieList_storeTemp = JSON.parse(JSON.stringify(dataPage));
 
     // console.log("movieList_storeTemp check item :");
     // console.log(movieList_storeTemp);
 
+    // Insert all the movie html to my MainMovieList
     for(let i=0; i < dataPage.length; i++){
-        const movie = dataPage[i];
-        const {poster_path,original_title,release_date} = movie;
+        const movie = dataPage[i]; //copy the reference
+        const {poster_path,original_title,release_date} = movie; //Destruction
 
-        // console.log('myTest' + poster_path + original_title + release_date);
-
+        // Create new Div, named mainMovieList-item
         const movieTemp = document.createElement('div');
         movieTemp.classList.add(`mainMovieList-item`);
         movieTemp.innerHTML =
@@ -184,96 +209,98 @@ function showMovie(data){
                  <button class="mainMovieList-likeButton-press" id='button_${i}'>Like it?</button>
              </div>
             `;
+        //append to main Movie List
         mainMovieList.appendChild(movieTemp);
     }
 
+    // Because all "Movie Image" is dynamic, we cannot use querySelector globally,
+    // but the image is clickable and these image buttons declare globally.(But locally still work)
+    // After we generate all movie HTML, then we will create all event listener.
     movieList_img_butts = document.querySelectorAll(".mainMovieList-item-image");
     movieList_img_butts.forEach((button) =>{
         button.addEventListener("click",() => {
-
+            // Get number to know which picture its clicked
             let tempIndex = button.id.split('_'); /* [button,number] */
             let index = tempIndex[tempIndex.length - 1];
 
-            //append to liked list array
+            // Get this movie info from movie storage array
             let getThisMovie = movieList_storeTemp[index];
 
-            console.log(getThisMovie);
+            // If it is clicked, the pop up screen will be visible.
             body_popUp_page.style.visibility = "visible";
 
+            // Update all the information about the pop up page
             const pop_backGround = document.querySelector('.body_popUp-backGround');
             pop_backGround.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
                                                                 url(${IMAGE_BASE_URL + getThisMovie.backdrop_path})`;
-
             const pop_mainImage = document.querySelector('.body_popUp-mainImage');
             pop_mainImage.src = `${IMAGE_BASE_URL + getThisMovie.poster_path}`;
-
             const pop_genres =  document.querySelector('.body_popUp-infoSection-genres');
             const genreArr = getThisMovie.genre_ids;
             const genresList = genres_bank.genres;
+
+            // Clean the Genres section before we push, (this section is dynamic)
             pop_genres.innerHTML = "";
+            // add all genres with specific back ground color
             for(let i=0; i < genreArr.length; i++){
                 for(let j=0; j < genresList.length; j++){
                     if(genreArr[i] === genresList[j].id){
                         const genres_single = document.createElement('p');
                         genres_single.classList.add('body_popUp-infoSection-genres-item');
-
                         genres_single.textContent = genresList[j].name;
                         genres_single.style.backgroundColor = genresList[j].color;
-
+                        // Append to genres section
                         pop_genres.appendChild(genres_single);
                     }
                 }
             }
-
+            // add description
             const pop_description = document.querySelector('.body_popUp-infoSection-description');
             pop_description.textContent = `${getThisMovie.overview}`;
-
+            // add year
             const title_year = document.querySelector('.body_popUp-infoSection-title');
             title_year.textContent = `${getThisMovie.original_title} (${getThisMovie.release_date})`;
-
+            // pop-up screen default location is at top, so after click, move to top
             window.scroll(0,50);
         });
     });
 
-    /* After generate all the like buttons, then select */
 
-    /*------------------------------------------------------------------------*/
-    // likedListPage.innerHTML = ''; //after remove templicate delete this line
-    /*-----------------------------------------------------------------------*/
-
+    // Because all "Like it" buttons are dynamic, we cannot use querySelector globally,
+    // but the buttons should declare globally.(But locally still work)
+    // After we generate all movie HTML, then we will create all event listener.
     allLike_butts = document.querySelectorAll(".mainMovieList-likeButton-press");
-
     allLike_butts.forEach((button) => {
         button.addEventListener("click", () => {
-
+            // Get number to know which picture its clicked
             let tempIndex = button.id.split('_'); /* [button,number] */
             let index = tempIndex[tempIndex.length - 1];
 
-            //append to liked list array
+            // Get this movie info from movie storage array
             let getThisMovie = movieList_storeTemp[index];
 
-            // console.log(movieList_storeTemp);
-
+            // if check the movie is in my liked list storage, if not, add it
             if(!likedList_storeTemp.includes(getThisMovie)){
 
+                // Notification badge update, and refresh it
                 badge_count++;
                 show_LikedListButton();
 
+                // add to my liked list storage
                 likedList_storeTemp.push(getThisMovie);
 
-                const {poster_path,original_title,release_date} = getThisMovie;
-
+                const {poster_path,original_title,release_date} = getThisMovie; //destruction
+                // Create to liked list html
                 const movieTemp = document.createElement('div');
                 movieTemp.classList.add(`likedList_mainPage-item`);
                 movieTemp.innerHTML =
-                    `<img class="likedList_mainPage-item-image" src="${IMAGE_BASE_URL + poster_path}" alt="Image">
+                    `<img class="likedList_mainPage-item-image" src="${IMAGE_BASE_URL + poster_path}" alt="LikedImage">
                      <div class="likedList_mainPage-item-info">
                          <h3 class="likedList_mainPage-item-info-title">${original_title}</h3>
                          <p class="likedList_mainPage-item-info-releaseDate">${release_date}</p>
                      </div>
                      `;
-                // console.log(movieList_storeTemp.length);
-                //add inner html
+                // Append html to liked list page
                 likedListPage.appendChild(movieTemp);
             }
         });
