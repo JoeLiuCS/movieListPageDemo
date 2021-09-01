@@ -174,32 +174,10 @@ function initButtons(){
         console.log("How many like items: ",likedList_storeTemp.length);
         //clean config page
         drag_list.innerHTML = '';
-        //reprint like movie list
-        likedListPage.innerHTML = '';
-        for(let i = 0; i < likedList_storeTemp.length; i++){
-            const {id,poster_path,original_title,release_date} = likedList_storeTemp[i];
-            const movieTemp = document.createElement('div');
-            movieTemp.classList.add(`likedList_mainPage-item`);
-            movieTemp.setAttribute("id",`${id}`);
-            movieTemp.innerHTML =
-                `<img class="likedList_mainPage-item-image" src="${IMAGE_BASE_URL + poster_path}" alt="LikedImage">
-                     <div class="likedList_mainPage-item-info">
-                         <h3 class="likedList_mainPage-item-info-title">${original_title}</h3>
-                         <p class="likedList_mainPage-item-info-releaseDate">${release_date}</p>
-                     </div>
-                     `;
-            // Append html to liked list page
-            likedListPage.appendChild(movieTemp);
-        }
     });
 }
 
 /*-------------------------------------------- Dragon Functions ----------------------------------------------*/
-function swapMyList(index_a, index_b, arr){
-    let temp = arr[index_a];
-    arr[index_a] = arr[index_b];
-    arr[index_b] = temp;
-}
 function handleDragStart(e,dom) {
     dom.style.opacity = '0.4';
 
@@ -241,9 +219,25 @@ function handleDrop(e,dom){
         dragItem.innerHTML = dom.innerHTML; // replace drag inner html
         dom.innerHTML = e.dataTransfer.getData('text/html'); // transfer data from data set
         let myEndIndex = dom.id.split('_')[1];
-        swapMyList(carryMyDragIndex - 1,myEndIndex - 1, likedList_storeTemp); //swap like list order
+        //swap like list order
+        swapMyList(carryMyDragIndex - 1,myEndIndex - 1, likedList_storeTemp);
+        //swap like list inner html
+        const getMyAllLikeMovies = document.querySelectorAll('.likedList_mainPage-item');
+        swapMyInnerHTML(carryMyDragIndex - 1,myEndIndex - 1,getMyAllLikeMovies);
     }
     return false;
+}
+
+function swapMyList(index_a, index_b, arr){
+    let temp = arr[index_a];
+    arr[index_a] = arr[index_b];
+    arr[index_b] = temp;
+}
+
+function swapMyInnerHTML(index_a,index_b,list){
+    let temp = list[index_a].innerHTML;
+    list[index_a].innerHTML = list[index_b].innerHTML;
+    list[index_b].innerHTML = temp;
 }
 
 /*-------------------------------------------------------------------------------------------------------*/
