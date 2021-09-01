@@ -52,7 +52,10 @@ let movieList_storeTemp = []; // Current page movie list storage
 let likedList_storeTemp = []; // Liked List storage
 let badge_count = 0;  // Like list notification count
 
-let dragItem = null; // handle the drag element
+let dragItem = null; // handle the drag element, drag Item use to check it is same object or position.
+let carryMyDragIndex; // handle the drag index
+
+
 /*---------------------------------------Programming Execute------------------------------------------------*/
 render();
 /*----------------------------------------------------------------------------------------------------------*/
@@ -148,67 +151,102 @@ function initButtons(){
     config_butt.addEventListener("click",() =>{
         config_page.style.visibility = "visible";
         console.log("Check How many like items: ",likedList_storeTemp.length);
+        // add like list to config page
+        for(let i = 0; i < likedList_storeTemp.length; i++){
+            const likeMoiveTitle = likedList_storeTemp[i].original_title;
+            const likedMovie_temp = document.createElement('div');
+            likedMovie_temp.classList.add('DragConfigPage-section-list-item');
+            likedMovie_temp.setAttribute("id",`dragNumber_${i+1}`);
+            likedMovie_temp.setAttribute("draggable",`true`);
+            likedMovie_temp.setAttribute('ondragstart','handleDragStart(event,this)');
+            likedMovie_temp.setAttribute('ondragover','handleDragOver(event,this)');
+            likedMovie_temp.setAttribute('ondragenter','handleDragEnter(event,this)');
+            likedMovie_temp.setAttribute('ondragleave','handlerDragLeave(event,this)');
+            likedMovie_temp.setAttribute('ondragend','handleDragEnd(event,this)');
+            likedMovie_temp.setAttribute('ondrop','handleDrop(event,this)');
+            likedMovie_temp.innerText = `${likeMoiveTitle}`;
+            drag_list.appendChild(likedMovie_temp);
+        }
     });
     /* Close Config page */
     configClose_butt.addEventListener("click",() => {
         config_page.style.visibility = "hidden";
         console.log("How many like items: ",likedList_storeTemp.length);
-    });
-    /* Drag section */
-    document.addEventListener('DOMContentLoaded',(e) =>{
-        function handleDragStart(e) {
-            this.style.opacity = '0.4';
-
-            dragItem = this;
-
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html',this.innerHTML);
-        }
-
-        function handleDragEnd(e) {
-            this.style.opacity = '1';
-            drag_items.forEach((item) => {
-                item.classList.remove('dragoverEfficient');
-            })
-        }
-
-        function handleDragOver(e){
-            if(e.preventDefault()){
-                e.preventDefault();
-            }
-            return false;
-        }
-
-        function handleDragEnter(e){
-            this.classList.add('dragoverEfficient');
-        }
-
-        function handlerDragLeave(e){
-            this.classList.remove('dragoverEfficient');
-        }
-
-        function handleDrop(e){
-            e.stopPropagation();
-
-            if(dragItem !== this){
-                dragItem.innerHTML = this.innerHTML;
-                this.innerHTML = e.dataTransfer.getData('text/html');
-            }
-            return false;
-        }
-
-        for(let i = 0; i < drag_items.length; i++) {
-            const item = drag_items[i];
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragover',handleDragOver);
-            item.addEventListener('dragenter',handleDragEnter);
-            item.addEventListener('dragleave',handlerDragLeave);
-            item.addEventListener('dragend',handleDragEnd);
-            item.addEventListener('drop',handleDrop);
+        //clean config page
+        drag_list.innerHTML = '';
+        //reprint like movie list
+        likedListPage.innerHTML = '';
+        for(let i = 0; i < likedList_storeTemp.length; i++){
+            const {id,poster_path,original_title,release_date} = likedList_storeTemp[i];
+            const movieTemp = document.createElement('div');
+            movieTemp.classList.add(`likedList_mainPage-item`);
+            movieTemp.setAttribute("id",`${id}`);
+            movieTemp.innerHTML =
+                `<img class="likedList_mainPage-item-image" src="${IMAGE_BASE_URL + poster_path}" alt="LikedImage">
+                     <div class="likedList_mainPage-item-info">
+                         <h3 class="likedList_mainPage-item-info-title">${original_title}</h3>
+                         <p class="likedList_mainPage-item-info-releaseDate">${release_date}</p>
+                     </div>
+                     `;
+            // Append html to liked list page
+            likedListPage.appendChild(movieTemp);
         }
     });
 }
 
+/*-------------------------------------------- Dragon Functions ----------------------------------------------*/
+function swapMyList(index_a, index_b, arr){
+    let temp = arr[index_a];
+    arr[index_a] = arr[index_b];
+    arr[index_b] = temp;
+}
+function handleDragStart(e,dom) {
+    dom.style.opacity = '0.4';
+
+    dragItem = dom; // Take drag dom
+
+    carryMyDragIndex = dom.id.split('_')[1];
+
+    e.dataTransfer.effectAllowed = 'move'; // event set up
+    e.dataTransfer.setData('text/html',dom.innerHTML); // event set data transfer
+}
+
+function handleDragEnd(e,dom) {
+    dom.style.opacity = '1';
+    drag_items.forEach((item) => {
+        item.classList.remove('dragoverEfficient');
+        //carry index refresh
+        carryMyDragIndex = null;
+    })
+}
+
+function handleDragOver(e,dom){
+    if(e.preventDefault()){
+        e.preventDefault();
+    }
+    return false;
+}
+
+function handleDragEnter(e,dom){
+    dom.classList.add('dragoverEfficient');
+}
+
+function handlerDragLeave(e,dom){
+    dom.classList.remove('dragoverEfficient');
+}
+
+function handleDrop(e,dom){
+    e.stopPropagation();
+    if(dragItem !== dom){ // drag Item use to check it is same object or position.
+        dragItem.innerHTML = dom.innerHTML; // replace drag inner html
+        dom.innerHTML = e.dataTransfer.getData('text/html'); // transfer data from data set
+        let myEndIndex = dom.id.split('_')[1];
+        swapMyList(carryMyDragIndex - 1,myEndIndex - 1, likedList_storeTemp); //swap like list order
+    }
+    return false;
+}
+
+/*-------------------------------------------------------------------------------------------------------*/
 /* use for refresh the main page when next or previous button is clicked*/
 /* this is Fvkin serious long */
 function showMovie(data){
