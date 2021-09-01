@@ -57,7 +57,10 @@ let carryMyDragIndex; // handle the drag index
 
 
 /*---------------------------------------Programming Execute------------------------------------------------*/
-render();
+document.addEventListener("DOMContentLoaded",(e) =>{
+    // Start doing the Work
+    render();
+})
 /*----------------------------------------------------------------------------------------------------------*/
 
 
