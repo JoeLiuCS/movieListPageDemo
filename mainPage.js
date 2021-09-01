@@ -52,7 +52,7 @@ let movieList_storeTemp = []; // Current page movie list storage
 let likedList_storeTemp = []; // Liked List storage
 let badge_count = 0;  // Like list notification count
 
-let dragItem = null;
+let dragItem = null; // handle the drag element
 /*---------------------------------------Programming Execute------------------------------------------------*/
 render();
 /*----------------------------------------------------------------------------------------------------------*/
@@ -154,57 +154,60 @@ function initButtons(){
         config_page.style.visibility = "hidden";
         console.log("How many like items: ",likedList_storeTemp.length);
     });
-
+    /* Drag section */
     document.addEventListener('DOMContentLoaded',(e) =>{
-
         function handleDragStart(e) {
             this.style.opacity = '0.4';
-            console.log(this);
+
+            dragItem = this;
+
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html',this.innerHTML);
         }
 
         function handleDragEnd(e) {
             this.style.opacity = '1';
+            drag_items.forEach((item) => {
+                item.classList.remove('dragoverEfficient');
+            })
+        }
+
+        function handleDragOver(e){
+            if(e.preventDefault()){
+                e.preventDefault();
+            }
+            return false;
+        }
+
+        function handleDragEnter(e){
+            this.classList.add('dragoverEfficient');
+        }
+
+        function handlerDragLeave(e){
+            this.classList.remove('dragoverEfficient');
+        }
+
+        function handleDrop(e){
+            e.stopPropagation();
+
+            if(dragItem !== this){
+                dragItem.innerHTML = this.innerHTML;
+                this.innerHTML = e.dataTransfer.getData('text/html');
+            }
+            return false;
         }
 
         for(let i = 0; i < drag_items.length; i++) {
             const item = drag_items[i];
             item.addEventListener('dragstart', handleDragStart);
-
+            item.addEventListener('dragover',handleDragOver);
+            item.addEventListener('dragenter',handleDragEnter);
+            item.addEventListener('dragleave',handlerDragLeave);
             item.addEventListener('dragend',handleDragEnd);
+            item.addEventListener('drop',handleDrop);
         }
     });
-
-    // addEventListenerForDrag();
 }
-
-// function addEventListenerForDrag (){
-//     for(let i = 0; i < drag_items.length; i++){
-//         const item = drag_items[i];
-//         console.log(item);
-//         // console.log("Check here before");
-//         // console.log(this);
-//         item.addEventListener('dragstart', (e) => {
-//             this.style.opacity = "0.4";
-//             // console.log(this);
-//         });
-//
-//         item.addEventListener('dragend',() => {
-//             this.style.opacity = "1";
-//         });
-//
-//         drag_list.addEventListener('dragover',(e) => {
-//             e.preventDefault();
-//         });
-//
-//         drag_list.addEventListener('dragenter',(e) => {
-//             e.preventDefault();
-//         });
-//
-//         drag_list.addEventListener('drop',(e) => {
-//             // this.append(dragItem);
-//         });
-//     }
-// }
 
 /* use for refresh the main page when next or previous button is clicked*/
 /* this is Fvkin serious long */
