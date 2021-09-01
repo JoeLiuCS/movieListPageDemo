@@ -5,8 +5,10 @@
   <title>moviePage</title>
   <link rel="stylesheet" href="mainPage.css">
 </head>
-<body>
-<!----------Navigation Bar section----------->
+<body><!----------Position relative----------->
+  <!----------Go Top Button----------->
+  <a id="goTopButton" href="#">Top</a>
+  <!----------Navigation Bar section----------->
   <header class="pageHead">
     <!----------Config href----------->
     <a class="config" href="#">Config</a>
@@ -17,18 +19,18 @@
 <!--        <li class="navigationBar-textMenu-item_movieList"><a href="#" onclick="mouseClick_HideOrShow_movieList()">Movie List</a></li>-->
 <!--        <li class="navigationBar-textMenu-item_likedList"><a href="#" onclick="mouseClick_HideOrShow_likedList()"> Liked List</a></li>-->
         <li class="navigationBar-textMenu-item_movieList"><a href="#">Movie List</a></li>
-        <li class="navigationBar-textMenu-item_likedList"><a href="#"> Liked List<span class="navigationBar-textMenu-item_likedList_badge"></span></a></li>
+        <li class="navigationBar-textMenu-item_likedList"><a href="#"> Liked List <!--position relative-->
+            <span class="navigationBar-textMenu-item_likedList_badge"></span><!--position absolute--></a></li>
 
       </ul>
     </nav>
   </header>
-
+  <!---------------- h1 Title ------------------->
+  <h1 class="title_Movies">The Most Popular Movies</h1>
   <!----------Movie list switch section----------->
-  <h1 class="title_TheMostPopularMovies">The Most Popular Movies</h1>
-  <div class="moviePage_switch">
+  <div class="moviePage_switch"><!-- Position relative -->
     <!-- Movie List page -->
     <div class="movieList_mainPage">
-
       <!-- previous & next button -->
       <div class="movieList_mainPage-buttons">
 <!--        <button id="movieList_mainPage-buttons-previous" onclick="previous_mainPage()">Previous</button>-->
@@ -40,23 +42,22 @@
       <!--(ID) Movie List -->
       <div id="mainMovieList">
         <!--Movie Item Temp use for css styling-->
-        <div class="mainMovieList-item">
-          <img class="mainMovieList-item-image" src="src/movie_default_bg.jpeg" alt="Image">
-          <div class="mainMovieList-item-info">
-            <h3 class="mainMovieList-item-info-title">Moive Title</h3>
-            <p class="mainMovieList-item-info-releaseDate">2020-01-01</p>
-          </div>
+<!--        <div class="mainMovieList-item">-->
+<!--          <img class="mainMovieList-item-image" src="src/movie_default_bg.jpeg" alt="Image">-->
+<!--          <div class="mainMovieList-item-info">-->
+<!--            <h3 class="mainMovieList-item-info-title">Moive Title</h3>-->
+<!--            <p class="mainMovieList-item-info-releaseDate">2020-01-01</p>-->
+<!--          </div>-->
 
-          <div class="mainMovieList-likeButton">
-            <button class="mainMovieList-likeButton-press">Like it?</button>
-          </div>
+<!--          <div class="mainMovieList-likeButton">-->
+<!--            <button class="mainMovieList-likeButton-press">Like it?</button>-->
+<!--          </div>-->
 
-        </div>
+<!--        </div>-->
       </div>
     </div>
-
     <!-- (ID) liked list page -->
-    <div id="likedList_mainPage">
+    <div id="likedList_mainPage"><!-- Position absolute -->
       <!-- test template -->
 <!--      <div class="likedList_mainPage-item">-->
 <!--        <img class="likedList_mainPage-item-image" src="src/movie_default_bg.jpeg" alt="Image">-->
@@ -65,18 +66,20 @@
 <!--          <p class="likedList_mainPage-item-info-releaseDate">2020-01-01</p>-->
 <!--        </div>-->
 <!--      </div>-->
-
     </div>
   </div>
-
-  <div class="body_popUp">
+  <!----------Loading Page section----------->
+  <div class="Loading-page">
+      <div class="Loading-page-content">
+          <img class="Loading-page-loader" src="src/loading.gif" alt="loading-img">
+      </div>
+  </div>
+  <!----------Pop Up section----------->
+  <div class="body_popUp"> <!----------Position absolute from BODY----------->
 <!--    <a class="body_popUp-close" href="#" onclick="closeButt_body_popUp()">Close</a>-->
     <a class="body_popUp-close" href="#">Close</a>
-
     <div class="body_popUp-backGround">
-
       <img class="body_popUp-mainImage" src="src/movie_default_bg.jpeg" alt="Image">
-
       <div class="body_popUp-infoSection">
         <h2 class="body_popUp-infoSection-title">Movie Title (Year)</h2>
         <div class="body_popUp-infoSection-genres">
@@ -89,11 +92,8 @@
           <p class="body_popUp-infoSection-producer-item">producer</p>
         </div>
       </div>
-
     </div>
   </div>
-
 </body>
 <script src="mainPage.js"></script>
-
 </html>

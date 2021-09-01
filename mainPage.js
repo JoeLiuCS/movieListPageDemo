@@ -10,7 +10,8 @@ const genres_bank = {"genres":[{"id":28,"name":"Action","color":"#ff0000"},{"id"
         {"id":18,"name":"Drama","color":"#80ff00"},{"id":10751,"name":"Family","color":"#40ff00"},{"id":14,"name":"Fantasy","color":"#00ff00"},
         {"id":36,"name":"History","color":"#00ff40"},{"id":27,"name":"Horror","color":"#00ff80"},{"id":10402,"name":"Music","color":"#00ffbf"},
         {"id":9648,"name":"Mystery","color":"#00ffff"},{"id":10749,"name":"Romance","color":"#00bfff"},{"id":878,"name":"Science Fiction","color":"#0080ff"},
-        {"id":10770,"name":"TV Movie","color":"#0040ff"},{"id":53,"name":"Thriller","color":"#0000ff"},{"id":10752,"name":"War","color":"#ff00ff"},{"id":37,"name":"Western","color":"#ff0040"}]};
+        {"id":10770,"name":"TV Movie","color":"#0040ff"},{"id":53,"name":"Thriller","color":"#0000ff"},{"id":10752,"name":"War","color":"#ff00ff"},
+        {"id":37,"name":"Western","color":"#ff0040"}]};
 
 const mainMovieList = document.getElementById('mainMovieList');
 const buttonsInfo = document.getElementById('movieList_mainPage-buttons_info');
@@ -20,7 +21,9 @@ const likedList_badge = document.querySelector('.navigationBar-textMenu-item_lik
 const movieListPage = document.querySelector(".movieList_mainPage");
 const likedListPage = document.querySelector("#likedList_mainPage");
 const body_popUp_page = document.querySelector('.body_popUp');
+const head_title = document.querySelector('.title_Movies');
 
+const moviePageSwitch = document.querySelector('.moviePage_switch');
 /*------------------------------ Buttons ----------------------------------------------------*/
 //get all buttons
 // const allLike_butts = document.querySelectorAll(".mainMovieList-likeButton-press");
@@ -45,22 +48,27 @@ let movieList_storeTemp = []; //use for add to like list
 let likedList_storeTemp = [];
 let badge_count = 0;
 
+
+//
 render();
 
 function render(){
     getMovies(popularMovie_URL + button_Page);
+
+    /**/
     initButtons();
 }
 
 function getMovies(url) {
     console.log(url);
+    //loadpage display
     fetch(url).then(res => res.json()).then(data => {
         console.log("Check my all data: ");
         console.log(data);
-
         getButtonInfo(data);
         showMovie(data);
     })
+    //loadpage none
 }
 
 function initButtons(){
@@ -69,6 +77,7 @@ function initButtons(){
             button_Page -=1;
             let popularMovie_URL_temp = popularMovie_URL + button_Page;
             console.log("button: " + button_Page);
+            // setTimeout(getMovies(popularMovie_URL_temp),10000);
             getMovies(popularMovie_URL_temp);
         }
     });
@@ -84,11 +93,13 @@ function initButtons(){
         config_butt.style.visibility = "hidden";
         movieListPage.style.visibility = "visible";
         likedListPage.style.visibility = "hidden";
+        head_title.textContent = "The Most Popular Movies";
     });
     likedList_butt.addEventListener("click", () => {
         config_butt.style.visibility = "visible";
         movieListPage.style.visibility = "hidden";
         likedListPage.style.visibility = "visible";
+        head_title.textContent = "The Liked Movies";
         likedList_badge.textContent = "";
         badge_count = 0;
     });
@@ -220,7 +231,7 @@ function showMovie(data){
             const title_year = document.querySelector('.body_popUp-infoSection-title');
             title_year.textContent = `${getThisMovie.original_title} (${getThisMovie.release_date})`;
 
-
+            window.scroll(0,50);
         });
     });
 

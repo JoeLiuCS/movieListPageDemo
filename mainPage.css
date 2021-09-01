@@ -6,10 +6,26 @@
 body{
     position: relative; /* use for pop up screen*/
 }
+#goTopButton{ /* go top button */
+    background-color: orange;
+    border-radius: 20px;  /* make a small radius*/
+    text-decoration: none;
+    width: 50px;
+    height: 50px;
+    position: fixed; /* Position is fixed no matter the screen moving*/
+    bottom: 30px;  /* away from bottom 30 pixels*/
+    right: 30px;   /* away from right 30 pixels */
+    z-index: 2; /* Make this button always on the top*/
+
+    text-align: center; /* put text in center*/
+    padding-top: 15px;
+}
+html{ /* slowly scrolling*/
+    scroll-behavior: smooth;
+}
 
 /*----------------------------------- Pop up screen ------------------------------------------*/
 .body_popUp{ /* Full page for pop up screen */
-    position: absolute; /* Same position at the main page*/
     left: 0;
     top: -20px;
     width: 100%;
@@ -19,42 +35,49 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    /*justify-content: center;*/
+    position: absolute; /* From Body page*/
 
     visibility: hidden;
 }
 
 .body_popUp-close{ /* Close button */
-    margin-left: auto;
-    margin-top: 50px;
     width: 50px;
     height: 20px;
+
+    margin-left: auto;
+    margin-top: 50px;
+
     text-decoration: none;
 }
+
 .body_popUp-backGround{ /* Pop up backGround */
+    /*Opacity low*/
     background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),url("src/movie_default_bg.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
+    height: 30%;
+    width: 80%;
+
     display: flex;
     align-items: center;
     justify-content: center;
     margin-top: 30px;
-    height: 30%;
-    width: 80%;
 }
-.body_popUp-mainImage{ /* Movie Image */
+
+.body_popUp-mainImage{ /* Popup Movie Image */
     width: 35%;
     height: 75%;
     margin-right: 30px;
 }
+
 .body_popUp-infoSection{ /* pop up screen Info section */
-    /*background-color: rgba(0,2,0,0.8);*/
+    width: 60%;
+    height: 75%;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 60%;
-    height: 75%;
 }
 .body_popUp-infoSection-title{ /* pop up screen title */
     margin: 10px;
@@ -66,39 +89,41 @@ body{
     height: auto;
 }
 .body_popUp-infoSection-genres-item{ /* pop up screen generes items */
+    border-radius: 3px;
+
     float: left;
     margin-left: 10px;
-    /*background-color:#00ff00; !* later remove, in js add style*!*/
-    border-radius: 3px;
     padding: 1px;
 }
 .body_popUp-infoSection-description{ /* pop up screen description*/
     width: 80%;
     height: auto;
+
     margin: 10px;
 }
 .body_popUp-infoSection-producer{ /* pop up screen producer screen*/
-    display: inline;
-    background-color:darkgray;
     width: 80%;
     height: 30%;
+
+    display: inline;
+    background-color:darkgray;
 }
 .body_popUp-infoSection-producer-item{ /* pop up screen producer item*/
     float: left;
     margin: 15px;
 }
 
-
-/*---------------------------------------------------------------------------------------------*/
-
+/*---------------------------------- Navigation Bar ---------------------------------------------*/
 .pageHead{ /* Set block displace */
     display: block;
     margin: 20px;
 }
+
 .config{ /* Config link */
     float: right;
     visibility: hidden;
 }
+
 .navigationBar{ /* Navigation Bar*/
     clear: right; /* Create brand new line */
 
@@ -107,6 +132,7 @@ body{
 
     border-bottom: 3px solid #333;
 }
+
 .navigationBar-logo{ /* Logo Image set up*/
     width: 8%;
     height: auto;
@@ -114,27 +140,27 @@ body{
 
 .navigationBar-textMenu-item_movieList,
 .navigationBar-textMenu-item_likedList{ /* Menu Text */
+    font-size: 1.5vw; /* Size based on the navigation bar*/
+
     float: left;
     margin: 20px;
-    font-size: 1.5vw; /* Size based on the navigation bar*/
     padding: 10px;
-
 
     list-style-type: none;
 }
+
 .navigationBar-textMenu-item_likedList{
     visibility: hidden;
-    position: relative; /* here here here*/
+    position: relative; /*Position relative for badge*/
 }
+
 .navigationBar-textMenu-item_likedList_badge{
     background-color: #fa3e3e;
     border-radius: 2px;
     color: white;
-
-    /*padding: 1px 1px;*/
     font-size: 13px;
 
-    position: absolute; /* Position the badge within the relatively positioned button */
+    position: absolute; /* Position absolute from likelist button*/
     top: 0;
     right: 0;
 }
@@ -147,38 +173,41 @@ body{
 .navigationBar-textMenu-item_likedList:hover{ /* Menu bar hover efficient*/
     background-image: url("src/line-clay-bg.svg");
     background-size: 100% 2px;
-    background-position: bottom;
     background-repeat: no-repeat;
+
+    background-position: bottom;
 }
 
 /*------------------------------------The most popular movies------------------------------------------------*/
-.title_TheMostPopularMovies{
+.title_Movies{
     margin-left: 20px;
 }
+
 .moviePage_switch{ /* use for switch page items*/
-    position: relative;
+    position: relative; /* position relative for movie list and liked list*/
     margin-top: 10px;
 }
+
 .movieList_mainPage{ /* Display movie list and buttons*/
     display: block;
 }
+
 .movieList_mainPage-buttons{ /* previous and next button */
     display: flex;
     justify-content: space-between;
     margin-left: 150px;
     margin-right: 150px;
-
 }
+
 #movieList_mainPage-buttons-previous{
     width: 100px;
 }
+
 #movieList_mainPage-buttons-next{
     width: 100px;
 }
 
-/*-----------------------------------------------------------------------------------------*/
-
-
+/*------------------------------------------ Main Movie List ------------------------------------------*/
 #mainMovieList{ /* display movie list*/
     margin-left: 50px;
     margin-right: 50px;
@@ -198,15 +227,18 @@ body{
     margin: 50px;
     position: relative; /* Make for hover button */
 }
+
 .mainMovieList-item-image{
     width: 100%;
     height: 85%;
     border-radius: 5px;
 }
+
 .mainMovieList-item-info{
     display: block;
     text-align: center;
 }
+
 .mainMovieList-likeButton-press{
     /*float: right;*/
     background-color: cadetblue;
@@ -217,16 +249,13 @@ body{
     width: 50%;
     height: 10%;
 
-    position: absolute; /* based on movie image position*/
+    position: absolute; /* position absolute from page-switch*/
     visibility: hidden;
 }
 
 .mainMovieList-item:hover .mainMovieList-likeButton-press{
     visibility: visible;
 }
-
-
-
 
 /*----------------------------Liked List-----------------------------------------------------*/
 
@@ -244,6 +273,7 @@ body{
     flex-wrap: wrap;
     justify-content: center;
 }
+
 .likedList_mainPage-item{
     width: 200px;
     height: 100%;
@@ -260,4 +290,18 @@ body{
 .likedList_mainPage-item-info{
     display: block;
     text-align: center;
+}
+
+/*---------------------------- Loading page ------------------------------------*/
+.Loading-page {
+    position: absolute;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 300px;
+    background: rgba(0,0,0,0.5);
+    text-align: center;
+    display: none;
+    /*visibility: hidden;*/
 }
