@@ -23,6 +23,7 @@ const likedListPage = document.querySelector("#likedList_mainPage");
 const body_popUp_page = document.querySelector('.body_popUp');
 const head_title = document.querySelector('.title_Movies');
 
+const config_page = document.querySelector('.DragConfigPage');
 const loading_page = document.querySelector('.Loading-page');
 
 /*-------------------------------------------- Buttons ----------------------------------------------------*/
@@ -31,6 +32,7 @@ let allLike_butts; // In asyn functions
 let movieList_img_butts;
 
 const config_butt = document.querySelector(".config");
+const configClose_butt = document.querySelector(".DragConfigPage-closeImage");
 const body_popUp_close_butt = document.querySelector(".body_popUp-close");
 
 const myPrevious_butt = document.querySelector('#movieList_mainPage-buttons-previous');
@@ -39,15 +41,18 @@ const myNext_butt = document.querySelector('#movieList_mainPage-buttons-next');
 const movieList_butt = document.querySelector('.navigationBar-textMenu-item_movieList');
 const likedList_butt = document.querySelector('.navigationBar-textMenu-item_likedList');
 
+const drag_items = document.querySelectorAll(".DragConfigPage-section-list-item");
+const drag_list = document.querySelector('.DragConfigPage-section-list');
+
 /*------------------------------------ Global variables ----------------------------------------------------*/
-let current_page,total_pages,total_results;
-let button_Page = 1;
+let current_page,total_pages,total_results; // Button info collections
+let button_Page = 1; // Record which page is
 
-let movieList_storeTemp = []; //use for add to like list
-let likedList_storeTemp = [];
-let badge_count = 0;
+let movieList_storeTemp = []; // Current page movie list storage
+let likedList_storeTemp = []; // Liked List storage
+let badge_count = 0;  // Like list notification count
 
-
+let dragItem = null;
 /*---------------------------------------Programming Execute------------------------------------------------*/
 render();
 /*----------------------------------------------------------------------------------------------------------*/
@@ -70,7 +75,6 @@ async function getMovies(url) {
 
         getPageIndex_Info(data);
         showMovie(data);
-
     }catch (error){
         console.log("url-Errors: ",error);
     }
@@ -140,7 +144,67 @@ function initButtons(){
     body_popUp_close_butt.addEventListener("click", () => {
         body_popUp_page.style.visibility = "hidden";
     });
+    /* Open Config page */
+    config_butt.addEventListener("click",() =>{
+        config_page.style.visibility = "visible";
+        console.log("Check How many like items: ",likedList_storeTemp.length);
+    });
+    /* Close Config page */
+    configClose_butt.addEventListener("click",() => {
+        config_page.style.visibility = "hidden";
+        console.log("How many like items: ",likedList_storeTemp.length);
+    });
+
+    document.addEventListener('DOMContentLoaded',(e) =>{
+
+        function handleDragStart(e) {
+            this.style.opacity = '0.4';
+            console.log(this);
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+        }
+
+        for(let i = 0; i < drag_items.length; i++) {
+            const item = drag_items[i];
+            item.addEventListener('dragstart', handleDragStart);
+
+            item.addEventListener('dragend',handleDragEnd);
+        }
+    });
+
+    // addEventListenerForDrag();
 }
+
+// function addEventListenerForDrag (){
+//     for(let i = 0; i < drag_items.length; i++){
+//         const item = drag_items[i];
+//         console.log(item);
+//         // console.log("Check here before");
+//         // console.log(this);
+//         item.addEventListener('dragstart', (e) => {
+//             this.style.opacity = "0.4";
+//             // console.log(this);
+//         });
+//
+//         item.addEventListener('dragend',() => {
+//             this.style.opacity = "1";
+//         });
+//
+//         drag_list.addEventListener('dragover',(e) => {
+//             e.preventDefault();
+//         });
+//
+//         drag_list.addEventListener('dragenter',(e) => {
+//             e.preventDefault();
+//         });
+//
+//         drag_list.addEventListener('drop',(e) => {
+//             // this.append(dragItem);
+//         });
+//     }
+// }
 
 /* use for refresh the main page when next or previous button is clicked*/
 /* this is Fvkin serious long */
@@ -171,25 +235,14 @@ function showMovie(data){
 
     let dataPage = data.results; // Get current page movies info
 
-    // console.log("My total page: " + data.total_pages);
-    // console.log("My total result: " + data.total_results);
-    // console.log("My current page: " + data.page);
-
     mainMovieList.innerHTML = ''; /* Clear TEMPLATE Inner HTML before we insert new html */
 
     // Update current page index info
     buttonsInfo.innerHTML= `<span id="movieList_mainPage-buttons_info">
                             Page ${current_page}/Total ${total_pages} of ${total_results} results</span>`;
 
-    // console.log("DataPage length :"+ dataPage.length);
-    // console.log("DataPage item_1 :");
-    // console.log(dataPage[0]);
-
     // Deep copy to my page storage array
     movieList_storeTemp = JSON.parse(JSON.stringify(dataPage));
-
-    // console.log("movieList_storeTemp check item :");
-    // console.log(movieList_storeTemp);
 
     // Insert all the movie html to my MainMovieList
     for(let i=0; i < dataPage.length; i++){
@@ -289,10 +342,11 @@ function showMovie(data){
                 // add to my liked list storage
                 likedList_storeTemp.push(getThisMovie);
 
-                const {poster_path,original_title,release_date} = getThisMovie; //destruction
+                const {id,poster_path,original_title,release_date} = getThisMovie; //destruction
                 // Create to liked list html
                 const movieTemp = document.createElement('div');
                 movieTemp.classList.add(`likedList_mainPage-item`);
+                movieTemp.setAttribute("id",`${id}`);
                 movieTemp.innerHTML =
                     `<img class="likedList_mainPage-item-image" src="${IMAGE_BASE_URL + poster_path}" alt="LikedImage">
                      <div class="likedList_mainPage-item-info">
