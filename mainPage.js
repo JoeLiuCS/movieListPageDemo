@@ -25,6 +25,7 @@ const head_title = document.querySelector('.title_Movies');
 
 const config_page = document.querySelector('.DragConfigPage');
 const loading_page = document.querySelector('.Loading-page');
+const producer_page = document.querySelector('.body_popUp-infoSection-producer');
 
 /*-------------------------------------------- Buttons ----------------------------------------------------*/
 
@@ -284,7 +285,6 @@ function showMovie(data){
     for(let i=0; i < dataPage.length; i++){
         const movie = dataPage[i]; //copy the reference
         const {poster_path,original_title,release_date} = movie; //Destruction
-
         // Create new Div, named mainMovieList-item
         const movieTemp = document.createElement('div');
         movieTemp.classList.add(`mainMovieList-item`);
@@ -349,6 +349,19 @@ function showMovie(data){
             // add year
             const title_year = document.querySelector('.body_popUp-infoSection-title');
             title_year.textContent = `${getThisMovie.original_title} (${getThisMovie.release_date})`;
+            // add producers
+            producer_page.innerHTML = '';
+            let producer_url = `${BASE_URL}/movie/${getThisMovie.id}?${API_KEY}&language=en-US`;
+            fetch(producer_url).then(res => res.json()).then(data => {
+                let companiesArr = data.production_companies;
+                for(let i = 0; i<companiesArr.length; i++){
+                    let logPath  =  companiesArr[i].logo_path;
+                    if(logPath != null){
+                        producer_page.innerHTML += `
+                                        <img class="body_popUp-infoSection-producer-item" src="${IMAGE_BASE_URL + logPath}" alt="Image" height="50px" width="80px">`
+                    }
+                }
+            });
             // pop-up screen default location is at top, so after click, move to top
             window.scroll(0,50);
         });
